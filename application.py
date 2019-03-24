@@ -15,7 +15,7 @@ Session(app)
 
 @app.route("/")
 def index():
-    first = True
-    if 'display_name' not in session:
-        first = False
-    return render_template("channel_list.html", first = first)
+    return render_template("channel_list.html")
+
+if __name__ == "__main__":
+    socketio.run(app)
