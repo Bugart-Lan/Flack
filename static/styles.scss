@@ -1,0 +1,21 @@
+body {
+    font-family: Helvetica;
+    background: #fafafa;
+}
+
+#sidebar {
+    width: 200px;
+    color: MediumSeaGreen;
+    background: lightblue;
+    height: 100vh;
+    div, ul {
+        padding: 5vh;
+    }
+    ul {
+        list-style-position: inside;
+        list-style-type: square;
+        li { padding-left: 1em; }
+        p { font-size: 1.3em; }
+        a { color: inherit; }
+    }
+}

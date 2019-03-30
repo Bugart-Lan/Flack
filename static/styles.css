@@ -1,22 +1,29 @@
 body {
-    font-family: 'Poppins', sans-serif;
-    background: #fafafa;
-}
-
-.wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
+  font-family: Helvetica;
+  background: #fafafa;
 }
 
 #sidebar {
-    width: 250px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 999;
-    background: #7386D5;
-    color: #fff;
-    transition: all 0.3s;
+  width: 200px;
+  color: MediumSeaGreen;
+  background: lightblue;
+  height: 100vh;
 }
+#sidebar div, #sidebar ul {
+  padding: 5vh;
+}
+#sidebar ul {
+  list-style-position: inside;
+  list-style-type: square;
+}
+#sidebar ul li {
+  padding-left: 1em;
+}
+#sidebar ul p {
+  font-size: 1.3em;
+}
+#sidebar ul a {
+  color: inherit;
+}
+
+/*# sourceMappingURL=styles.css.map */
