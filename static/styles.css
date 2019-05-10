@@ -1,29 +1,35 @@
 body {
-  font-family: Helvetica;
-  background: #fafafa;
+    overflow-x: hidden;
 }
 
-#sidebar {
-  width: 200px;
-  color: MediumSeaGreen;
-  background: lightblue;
-  height: 100vh;
-}
-#sidebar div, #sidebar ul {
-  padding: 5vh;
-}
-#sidebar ul {
-  list-style-position: inside;
-  list-style-type: square;
-}
-#sidebar ul li {
-  padding-left: 1em;
-}
-#sidebar ul p {
-  font-size: 1.3em;
-}
-#sidebar ul a {
-  color: inherit;
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: 0rem;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
 }
 
-/*# sourceMappingURL=styles.css.map */
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+.container-fluid {
+    min-width: 89vw;
+    min-height: 100vh;
+}
+
+.card-img {
+    margin-left: 10px;
+    width: 70px;
+}
