@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% block script %}
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script>
+        var first = "{{ first }}"
+    </script>
     <script src="{{ url_for('static', filename='index.js') }}"></script>
 {% endblock %}
 {% block body %}
@@ -11,7 +14,7 @@
             <div class="sidebar-heading">Flack</div>
             <div class="list-group list-group-flush">
                 {% for channel in channels %}
-                <a ref="#" data-channel="{{ channel }}" class="nav-link list-group list-group-item bg-light">{{ channel }}</a>
+                <a href="" data-channel="{{ channel }}" class="nav-link list-group list-group-item bg-light">{{ channel }}</a>
                 {% endfor %}
             </div>
         </div>
@@ -21,6 +24,7 @@
         <div class="page-content-wrapper">
             <div class="container-fluid bg-light" id="page">
                 <h1 class="mt-4" id="name"></h1>
+                <h5 id="current_channel"></h5>
                 <div class="card bg-light mb-3">
                     <div class="row no-gutters">
                         <div class="col-1" style="padding: 10px;">
@@ -34,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="submit-form" class="input-group mb-3" style="width: 104rem">
+                <div id="submit-form" class="input-group mb-3" style="width: 100rem">
                     <input id="message" type="text" class="form-control" placeholder="message" />
                     <div class="input-group-append">
                         <button id="submit" class="btn btn-secondary" type="button">Submit</button>

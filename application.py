@@ -1,5 +1,6 @@
 import os
 import requests
+import json
 
 from flask import Flask, jsonify, session, render_template, request
 from flask_session import Session
@@ -21,20 +22,23 @@ dialogs = {'Channel 1': [{'message': "Hello_world! This is a new website", 'name
 
 @app.route("/")
 def index():
-    return render_template("index.html", channels = channels, dialogs = dialogs)
+    return render_template("index.html", channels = channels, dialogs = dialogs, first = channels[0])
 
 @socketio.on("new message")
 def add_new_message(data):
     message = data['message']
     name = data['name']
     dialogs[current].append(data)
+    print(dialogs)
     if len(dialogs[current]) > 100:
         dialogs[current].pop(0)
     emit('broadcast_new_message', {'message': message, 'name': name}, broadcast=True)
 
-@app.route("/change_channel")
-def change_channel(channel):
-    return True
+@app.route("/change_channel/<name>")
+def change_channel(name):
+    global current
+    current = name
+    return json.dumps(dialogs[name])
 
 if __name__ == "__main__":
     socketio.run(app)

@@ -8,21 +8,24 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('display_name', input)
         }
     }
-    /*if (!localStorage.getItem('dialog')) {
-        var dialog = {'Channel_1': []}
-        console.log(dialog)
-        localStorage.setItem('dialog', JSON.stringnify(dialog))
+
+    load_page(first)
+    /*
+    if (!localStorage.getItem('dialogs')) {
+        var dialogs = {'Channel_1': []}
+        localStorage.setItem('dialogw', JSON.stringify(dialogs))
     }
-    var dialog = localStorage.getItem('dialog')
+    var dialogs = JSON.parse(localStorage.getItem('dialogs'))
     var current_channel = Object.keys(dialog)[0]
+    */
 
     document.querySelectorAll('.nav-link').forEach(link => {
         link.onclick = () => {
-            current_channel = link.dataset.channel
             load_page(link.dataset.channel)
+            return false
         }
     })
-    */
+
 
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     socket.on('connect', () => {
@@ -41,7 +44,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const name = localStorage.getItem('display_name')
     document.querySelector('#name').innerHTML = `Hi ${name}`
+    document.querySelector('#current_channel').innerHTML = `#${first}`
 })
+
+function load_page(name) {
+    document.querySelector('#current_channel').innerHTML = `#${name}`
+    const request = new XMLHttpRequest()
+    request.open('GET', `/change_channel/${name}`)
+    request.onload = () => {
+        document.querySelectorAll('.card').forEach(element => {
+            element.parentNode.removeChild(element)
+        })
+        console.log(request.response)
+        const response = JSON.parse(request.response)
+        for (let i = 0; i < response.length; i++) {
+            addNewBox(response[i]['name'], response[i]['message'])
+        }
+    }
+    request.send()
+}
 
 function addNewBox(name, text) {
     var card = document.createElement('div')
