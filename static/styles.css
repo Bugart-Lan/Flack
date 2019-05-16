@@ -37,3 +37,8 @@ body {
 .card {
     margin-right: 4rem;
 }
+
+.label {
+    font-size: 13px;
+    color: black;
+}

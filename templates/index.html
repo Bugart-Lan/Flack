@@ -1,9 +1,6 @@
 {% extends "layout.html" %}
 {% block script %}
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-    <script>
-        var first = "{{ first }}"
-    </script>
     <script src="{{ url_for('static', filename='index.js') }}"></script>
 {% endblock %}
 {% block body %}
@@ -11,11 +8,17 @@
 
         <!-- Sidebar -->
         <div class="bg-light border-right" id="sidebar-wrapper">
-            <div class="sidebar-heading">Flack</div>
-            <div class="list-group list-group-flush">
+            <div class="sidebar-heading row">
+                <img src="/static/tiger.png" style="height: 45px; margin-left: 5px;">
+                <h2 style="padding: 5px; margin-top: 5px;">Flack</h2>
+            </div>
+            <div id="channels" class="list-group list-group-flush">
                 {% for channel in channels %}
                 <a href="" data-channel="{{ channel }}" class="nav-link list-group list-group-item bg-light">{{ channel }}</a>
                 {% endfor %}
+            </div>
+            <div class="list-group list-group-flush">
+                <button id="add_channel" type="button" class="btn btn-primary">Add new channel</button>
             </div>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -23,8 +26,10 @@
         <!-- Page Content -->
         <div class="page-content-wrapper">
             <div class="container-fluid bg-light" id="page">
-                <h1 class="mt-4" id="name"></h1>
-                <h5 id="current_channel"></h5>
+                <div class="row">
+                    <h1 class="mt-4" id="name" style="margin-left: 15px;"></h1>
+                    <h4 id="current_channel" style="padding: 10px; margin-top: 20px;"></h4>
+                </div>
                 <div class="card bg-light mb-3">
                     <div class="row no-gutters">
                         <div class="col-1" style="padding: 10px;">

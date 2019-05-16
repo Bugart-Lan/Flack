@@ -15,30 +15,39 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-current = 'Channel 1'
 channels = ['Channel 1', 'Channel 2', 'Channel 3', 'Channel 4']
-dialogs = {'Channel 1': [{'message': "Hello_world! This is a new website", 'name': "name"}],
+dialogs = {'Channel 1': [{'message': "Hello_world! This is a new website", 'name': "name", 'timestamp': 'January 1, 1997, 12:00'}],
         'Channel 2': [], 'Channel 3': [], 'Channel 4': []}
 
 @app.route("/")
 def index():
     return render_template("index.html", channels = channels, dialogs = dialogs, first = channels[0])
 
+@app.route("/get_channels")
+def get_channels():
+    return json.dumps(channels)
+
 @socketio.on("new message")
 def add_new_message(data):
+    print(data)
     message = data['message']
     name = data['name']
-    dialogs[current].append(data)
-    print(dialogs)
-    if len(dialogs[current]) > 100:
-        dialogs[current].pop(0)
-    emit('broadcast_new_message', {'message': message, 'name': name}, broadcast=True)
+    channel = data['channel']
+    timestamp = data['timestamp']
+    dialogs[channel].append(data)
+    if len(dialogs[channel]) > 100:
+        dialogs[channel].pop(0)
+    emit('broadcast_new_message', {'message': message, 'name': name, 'timestamp': timestamp, 'channel': channel}, broadcast=True)
 
-@app.route("/change_channel/<name>")
-def change_channel(name):
-    global current
-    current = name
+@app.route("/load_channel/<name>")
+def load_channel(name):
     return json.dumps(dialogs[name])
+
+@app.route("/add_new_channel/<name>")
+def add_new_channel(name):
+    channels.append(name)
+    dialogs[name] = []
+    return jsonify(success = True)
 
 if __name__ == "__main__":
     socketio.run(app)
