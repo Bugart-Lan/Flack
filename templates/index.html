@@ -1,49 +1,78 @@
 {% extends "layout.html" %}
 {% block script %}
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script id="card-template" type="text/x-handlebars-template">
+        {% raw %}
+        <div class="card bg-light mb-3">
+            <div class="row no-gutters">
+                <div class="col-1" style="padding:10px;">
+                    <img src="/static/image/user.png" class="card-img">
+                </div>
+                <div class="col">
+                    <div class="card-body">
+                        <h5 class="card-title font-weight-bold">
+                            {{ name }}&nbsp
+                            <spam class="label font-weight-light">{{ timestamp }}</spam>
+                        </h5>
+                        <p class="card-text">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endraw %}
+    </script>
+    <script id="channel-template" type="text/x-handlebars-template">
+        {% raw %}
+        <li class="nav-item">
+            <a href="" class="nav-link" data-channel="{{ channel }}" onclick="switchChannel('{{ channel }}')">
+                <span data-feather="message-circle"></span>{{ channel }}
+            </a>
+        </li>
+        {% endraw %}
+    </script>
     <script src="{{ url_for('static', filename='index.js') }}"></script>
 {% endblock %}
 {% block body %}
-    <div class="d-flex" id="wrapper">
-
-        <!-- Sidebar -->
-        <div class="bg-light border-right" id="sidebar-wrapper">
-            <div class="sidebar-heading row">
-                <img src="/static/tiger.png" style="height: 45px; margin-left: 5px;">
-                <h2 style="padding: 5px; margin-top: 5px;">Flack</h2>
-            </div>
-            <div id="channels" class="list-group list-group-flush">
-                {% for channel in channels %}
-                <a href="" data-channel="{{ channel }}" class="nav-link list-group list-group-item bg-light">{{ channel }}</a>
-                {% endfor %}
-            </div>
-            <div class="list-group list-group-flush">
-                <button id="add_channel" type="button" class="btn btn-primary">Add new channel</button>
-            </div>
-        </div>
-        <!-- /#sidebar-wrapper -->
-
-        <!-- Page Content -->
-        <div class="page-content-wrapper">
-            <div class="container-fluid bg-light" id="page">
-                <div class="row">
-                    <h1 class="mt-4" id="name" style="margin-left: 15px;"></h1>
-                    <h4 id="current_channel" style="padding: 10px; margin-top: 20px;"></h4>
-                </div>
-                <div class="card bg-light mb-3">
-                    <div class="row no-gutters">
-                        <div class="col-1" style="padding: 10px;">
-                            <img src="/static/tiger.png" class="card-img">
+    <nav class="navbar navbar-dark bg-dark sticky-top flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Flack</a>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="#">Sign out</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar mt-5">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <div id="channels">
+                            {% for channel in channels %}
+                            <li class="nav-item">
+                                <a href="" class="nav-link" data-channel="{{ channel }}" onclick="switchChannel('{{ channel }}')">
+                                    <span data-feather="message-circle"></span>{{ channel }}
+                                </a>
+                            </li>
+                            {% endfor %}
                         </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h4 class="card-title">Name</h4>
-                                <p class="card-text">Hello_world! This is a new website</p>
-                            </div>
-                        </div>
-                    </div>
+                        <li id="add_channel" class="nav-item">
+                            <a href="" class="nav-link">
+                                <span data-feather="plus"></span>Create channel
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <div id="submit-form" class="input-group mb-3" style="width: 100rem">
+            </nav>
+            <!-- Main content -->
+            <div role="main" data-spy="scroll" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h4 id="current_channel"></h4>
+                </div>
+                <div id="page"></div>
+                <div id="submit-form" class="input-group mb-3">
                     <input id="message" type="text" class="form-control" placeholder="message" />
                     <div class="input-group-append">
                         <button id="submit" class="btn btn-secondary" type="button">Submit</button>
@@ -52,4 +81,10 @@
             </div>
         </div>
     </div>
+
+    <!-- icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+        feather.replace()
+    </script>
 {% endblock %}

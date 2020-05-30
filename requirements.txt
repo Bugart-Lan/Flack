@@ -1,2 +1,5 @@
 Flask
+Flask-Session
 Flask-SocketIO
+Requests
+python-dotenv 

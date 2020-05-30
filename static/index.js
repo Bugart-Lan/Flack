@@ -1,3 +1,6 @@
+const template = Handlebars.compile(document.querySelector('#card-template').innerHTML);
+const channel_template = Handlebars.compile(document.querySelector('#channel-template').innerHTML);
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('display_name')) {
         var input = prompt("Please enter your display name: ")
@@ -26,15 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     load_page(localStorage.getItem('current_channel'))
-
-    //switch channel
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.onclick = () => {
-            localStorage.setItem('current_channel', link.dataset.channel)
-            load_page(link.dataset.channel)
-            return false
-        }
-    })
 
     //add new channel
     const btn = document.querySelector('#add_channel')
@@ -78,12 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const current_channel = localStorage.getItem('current_channel')
         console.log(current_channel)
         console.log(data.channel)
-        if (current_channel == data.channel) { addNewBox(data.name, data.message, data.timestamp) }
+        if (current_channel == data.channel) { insertNewCard(data.name, data.message, data.timestamp) }
     })
 
     const name = localStorage.getItem('display_name')
     const current_channel = localStorage.getItem('current_channel')
-    document.querySelector('#name').innerHTML = `Hi ${name}`
+    // document.querySelector('#name').innerHTML = `Hi ${name}`
     document.querySelector('#current_channel').innerHTML = `#${current_channel}`
 })
 
@@ -98,7 +92,7 @@ function load_page(name) {
         console.log(request.response)
         const response = JSON.parse(request.response)
         for (let i = 0; i < response.length; i++) {
-            addNewBox(response[i]['name'], response[i]['message'], response[i]['timestamp'])
+            insertNewCard(response[i]['name'], response[i]['message'], response[i]['timestamp'])
         }
     }
     request.send()
@@ -117,57 +111,21 @@ function timestamp() {
     return time
 }
 
-function addNewList(name) {
-    var a = document.createElement('a')
-    a.innerHTML = name
-    a.className = "nav-link list-group list-group-item bg-light"
-    a.dataset.channel = name
-    a.onclick = () => {
-        localStorage.setItem('current_channel', name)
-        load_page(name)
-        return false
-    }
-    document.querySelector('#channels').append(a)
+function switchChannel(channel) {
+    console.log(channel)
+    localStorage.setItem('current_channel', channel)
+    load_page(channel)
+    return false
 }
 
-function addNewBox(name, text, timestamp) {
-    var card = document.createElement('div')
-    card.className = "card bg-light mb-3"
+function addNewList(name) {
+    const content = channel_template({'channel': name})
+    const channel_list = document.querySelector('#channels')
+    channel_list.innerHTML += content
+}
 
-    var newDiv = document.createElement('div')
-    newDiv.className = "row no-gutters"
-
-    var newDiv1 = document.createElement('div')
-    newDiv1.className = "col-1"
-    newDiv1.setAttribute('style', 'padding: 10px;')
-    var img = document.createElement('img')
-    img.className = "card-img"
-    img.setAttribute('src', '/static/user.png')
-    newDiv1.append(img)
-    newDiv.append(newDiv1)
-
-    var newDiv2 = document.createElement('div')
-    newDiv2.className = "col-md-8"
-    var card_body = document.createElement('div')
-    card_body.className = "card-body"
-    var h4 = document.createElement('h4')
-    h4.className = "card-title font-weight-bold"
-    h4.innerHTML = name
-    var label = document.createElement('spam')
-    label.innerHTML = timestamp
-    label.className = "label font-weight-light"
-    h4.append(label)
-    card_body.append(h4)
-    var p = document.createElement('p')
-    p.className = "card-text"
-    p.innerHTML = text
-    card_body.append(p)
-    newDiv2.append(card_body)
-
-    newDiv.append(newDiv2)
-    card.append(newDiv)
-
-    var page = document.querySelector('#page')
-    var button = document.querySelector('#submit-form')
-    page.insertBefore(card, button)
+function insertNewCard(name, text, timestamp) {
+    const content = template({'name': name, 'message': text, 'timestamp': timestamp})
+    const page = document.querySelector('#page')
+    page.innerHTML += content
 }
