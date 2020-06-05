@@ -6,7 +6,7 @@
         {% raw %}
         <div class="card bg-light mb-3">
             <div class="row no-gutters">
-                <div class="col-1" style="padding:10px;">
+                <div class="col-md-1 col-sm-2 ml-1 mt-3">
                     <img src="/static/image/user.png" class="card-img">
                 </div>
                 <div class="col">
@@ -16,6 +16,9 @@
                             <spam class="label font-weight-light">{{ timestamp }}</spam>
                         </h5>
                         <p class="card-text">{{ message }}</p>
+                        <a style="{{ style }}" href="{{ attach_src }}" download>
+                            <span data-feather='download'></span>{{ attach_name }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -71,9 +74,14 @@
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
                     <h4 id="current_channel"></h4>
                 </div>
-                <div id="page"></div>
+                <div id="page" class="mb-5"></div>
+                <div id="files" class="mb-1"></div>
                 <div id="submit-form" class="input-group mb-3">
                     <input id="message" type="text" class="form-control" placeholder="message" />
+                    <input type="file" id="file-upload" style="display:none" onchange="updateFiles()" />
+                    <div class="input-group-append">
+                        <button class="btn btn-info" onclick="upload()"><span data-feather="file-plus"/></button>
+                    </div>
                     <div class="input-group-append">
                         <button id="submit" class="btn btn-secondary" type="button">Submit</button>
                     </div>

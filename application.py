@@ -29,15 +29,17 @@ def get_channels():
 
 @socketio.on("new message")
 def add_new_message(data):
-    print(data)
+    print(0)
     message = data['message']
     name = data['name']
     channel = data['channel']
     timestamp = data['timestamp']
+    file = data['file']
     dialogs[channel].append(data)
     if len(dialogs[channel]) > 100:
         dialogs[channel].pop(0)
-    emit('broadcast_new_message', {'message': message, 'name': name, 'timestamp': timestamp, 'channel': channel}, broadcast=True)
+    emit('broadcast_new_message', {'message': message, 'name': name, 'timestamp': timestamp,
+                                    'channel': channel, 'file': file}, broadcast=True)
 
 @app.route("/load_channel/<name>")
 def load_channel(name):

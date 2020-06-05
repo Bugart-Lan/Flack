@@ -102,12 +102,15 @@ body {
 }
 
 .card-img {
-    margin-left: 10px;
     width: 70px;
 }
 
 .card {
     margin-right: 4rem;
+}
+
+.card-body {
+    padding: 1rem;
 }
 
 .label {
