@@ -4,23 +4,16 @@
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     <script id="card-template" type="text/x-handlebars-template">
         {% raw %}
-        <div class="card bg-light mb-3">
-            <div class="row no-gutters">
-                <div class="col-md-1 col-sm-2 ml-1 mt-3">
-                    <img src="/static/image/user.png" class="card-img">
-                </div>
-                <div class="col">
-                    <div class="card-body">
-                        <h5 class="card-title font-weight-bold">
-                            {{ name }}&nbsp
-                            <spam class="label font-weight-light">{{ timestamp }}</spam>
-                        </h5>
-                        <p class="card-text">{{ message }}</p>
-                        <a style="{{ style }}" href="{{ attach_src }}" download>
-                            <span data-feather='download'></span>{{ attach_name }}
-                        </a>
-                    </div>
-                </div>
+        <div class="row mb-3">
+            <div class="user-img">
+                <a href="#"><img src="static/image/person-square.svg" data-toggle="tooltip" data-placement="bottom" title="{{ name }}"/></a>
+            </div>
+            <div class="border col">
+                <p class="timestamp"><b> {{ name }}</b> &nbsp; <i>{{ timestamp }}</i></p>
+                <p>{{ message }}</p>
+                <a style="{{ style }}" href="{{ attach_src }}" download>
+                    <span data-feather='download'></span>{{ attach_name }}
+                </a>
             </div>
         </div>
         {% endraw %}
@@ -89,7 +82,11 @@
             </div>
         </div>
     </div>
-
+    <script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+    </script>
     <!-- icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script>

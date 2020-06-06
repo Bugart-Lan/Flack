@@ -5,6 +5,7 @@ import json
 from flask import Flask, jsonify, session, render_template, request
 from flask_session import Session
 from flask_socketio import SocketIO, emit
+from time import asctime, localtime
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -16,8 +17,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 channels = ['Channel 1', 'Channel 2', 'Channel 3', 'Channel 4']
-dialogs = {'Channel 1': [{'message': "Hello_world! This is a new website", 'name': "name", 'timestamp': 'January 1, 1997, 12:00'}],
-        'Channel 2': [], 'Channel 3': [], 'Channel 4': []}
+dialogs = {'Channel 1': [], 'Channel 2': [], 'Channel 3': [], 'Channel 4': []}
 
 @app.route("/")
 def index():
@@ -29,17 +29,13 @@ def get_channels():
 
 @socketio.on("new message")
 def add_new_message(data):
-    print(0)
-    message = data['message']
-    name = data['name']
+    print(f"got data at {asctime(localtime())}")
     channel = data['channel']
-    timestamp = data['timestamp']
-    file = data['file']
     dialogs[channel].append(data)
     if len(dialogs[channel]) > 100:
         dialogs[channel].pop(0)
-    emit('broadcast_new_message', {'message': message, 'name': name, 'timestamp': timestamp,
-                                    'channel': channel, 'file': file}, broadcast=True)
+    emit('broadcast_new_message', data, broadcast=True)
+    print(f"send data at {asctime(localtime())}")
 
 @app.route("/load_channel/<name>")
 def load_channel(name):

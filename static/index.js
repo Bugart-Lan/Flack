@@ -62,12 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = document.querySelector('#message').value
             const channel = localStorage.getItem('current_channel')
             const time = timestamp()
-            console.log(time)
+            console.log(`Message: ${message}. Button click at ${time}`)
             file = handleFileUpload((f) => {
                 socket.emit('new message', {'message': message, 'name': name, 'timestamp': time,
                                             'channel': channel, 'file': f})
             })
             document.querySelector('#message').value = ""
+            document.querySelector('#file-upload').value = null
             document.querySelector('#files').innerHTML = ""
         }
     })
@@ -75,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('broadcast_new_message', data => {
         const current_channel = localStorage.getItem('current_channel')
         if (current_channel == data.channel) {
+            console.log(`Data receive at ${timestamp()}`)
             insertNewCard(data.name, data.message, data.timestamp, data.file)
         }
     })
@@ -103,14 +105,7 @@ function load_page(name) {
 const months = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 function timestamp() {
     const today = new Date
-    var time = months[today.getMonth()] + ' ' + today.getDate() + ', ' + today.getFullYear() + ', '
-    var h = today.getHours()
-    var m = today.getMinutes()
-    if (h / 10 >> 0 == 0) {h = `0${h}`}
-    if (m / 10 >> 0 == 0) {m = `0${m}`}
-    time = time + h + ':' + m
-    console.log(time)
-    return time
+    return today.toString()
 }
 
 function switchChannel(channel) {
@@ -133,13 +128,16 @@ function insertNewCard(name, text, timestamp, file) {
     if (file != null) {
         attach_src = file.binary
         attach_name = file.name
-        style =''
+        style = ''
     }
     const content = template({'name': name, 'message': text, 'timestamp': timestamp,
                             'style': style, 'attach_src': attach_src, 'attach_name': attach_name })
     const page = document.querySelector('#page')
     page.innerHTML += content
     feather.replace()
+    $('[data-toggle="tooltip"]').tooltip()
+    const time = new Date()
+    console.log(`Card inserted at ${time.toString()}`)
 }
 
 function upload() {
@@ -165,7 +163,6 @@ function handleFileUpload(callback) {
         fileReader.readAsDataURL(file)
         fileReader.onload = () => {
             const arrayBuffer = fileReader.result
-            console.log(arrayBuffer)
             const f = {
                 name: file.name,
                 type: file.type,
