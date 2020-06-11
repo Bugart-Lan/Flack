@@ -3,17 +3,20 @@ const channel_template = Handlebars.compile(document.querySelector('#channel-tem
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('display_name')) {
-        var input = prompt("Please enter your display name: ")
-        while (input.length == 0) {
-            input = prompt("You must enter your display name: ")
-        }
-        if (input != "null") {
-            localStorage.setItem('display_name', input)
+        var modal = $('#userInfoModal').modal('show')
+        document.querySelector('.modal-footer button[name="submit"]').onclick = () => {
+            var username = modal.find('input[name="username"]').val()
+            if (username.length == 0) {
+                $('#error-messages').show('fast')
+            } else {
+                localStorage.setItem('display_name', username)
+                modal.modal('hide')
+            }
         }
     }
 
     if (!localStorage.getItem('current_channel')) {
-        const first = document.querySelector('.nav-link')
+        const first = document.querySelector('.channel')
         localStorage.setItem('current_channel', first.dataset.channel)
     }
 
@@ -61,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#submit').onclick = () => {
             const message = document.querySelector('#message').value
             const channel = localStorage.getItem('current_channel')
+            const name = localStorage.getItem('display_name')
             const time = timestamp()
             console.log(`Message: ${message}. Button click at ${time}`)
             file = handleFileUpload((f) => {

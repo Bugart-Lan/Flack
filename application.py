@@ -16,8 +16,8 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-channels = ['Channel 1', 'Channel 2', 'Channel 3', 'Channel 4']
-dialogs = {'Channel 1': [], 'Channel 2': [], 'Channel 3': [], 'Channel 4': []}
+channels = ['announcements', 'general']
+dialogs = {'announcements': [], 'general': []}
 
 @app.route("/")
 def index():
